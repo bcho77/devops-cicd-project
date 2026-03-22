@@ -1,23 +1,43 @@
 pipeline {
     agent any
 
+    environment{
+        IMAGE_NAME = 'vaninoel/welcome-app'
+        IMAGE_TAG = "${BUILD_NUMBER}"
+    }
+
     stages {
-        stage('Build') {
+        stage('Checkout Code') {
             steps {
-                echo 'Building the application...'
-                sh 'docker build -t cicd-app:latest -f docker/dockerfile .'
+                echo 'Cloning repository.....'
+                git branch: 'main', url: 'https://github.com/bcho77/devops-cicd-project.git'
             }
         }
-        stage('Test') {
+        stage('Build docker image') {
             steps {
-                echo 'Running tests...'
-                // Add your test commands here
+                echo 'Building docker image...'
+                sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f docker/dockerfile .'
             }
         }
-        stage('Deploy') {
+        stage('Login to Docker Hub') {
             steps {
-                echo 'Deploying the application...'
-                // Add your deployment commands here
+                echo 'Logging into Docker Hub...'
+                withCredentials([usernamPassword(
+                    credentialsId: 'docker-hub-credentials',
+                    usernameVariable: 'DOCKER_USERNAME',
+                    passwordVariable: 'DOCKER_PASSWORD'
+                )]){
+                    sh '''
+                        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                    '''
+                }
+            }
+        }
+        stage('Push to Docker Hub'){
+            steps{
+                echo 'Pushing to Docker Hub'
+                sh 'docker push ${IMAGE_NAME}:${IMAGE_TAG}'
+
             }
         }
     }
