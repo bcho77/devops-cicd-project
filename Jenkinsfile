@@ -16,7 +16,7 @@ pipeline {
         stage('Build docker image') {
             steps {
                 echo 'Building docker image...'
-                sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f docker/dockerfile .'
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f docker/dockerfile ."
             }
         }
         stage('Login to Docker Hub') {
@@ -36,7 +36,7 @@ pipeline {
         stage('Push to Docker Hub'){
             steps{
                 echo 'Pushing to Docker Hub'
-                sh 'docker push ${IMAGE_NAME}:${IMAGE_TAG}'
+                sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
 
             }
         }
