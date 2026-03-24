@@ -1,15 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "welcome.fullname" . }}
+  name: {{ .Values.app.name }}
   labels:
-    {{- include "welcome.labels" . | nindent 4 }}
+    app: {{ .Values.app.name }}
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: http
+      targetPort: {{ .Values.service.targetPort }}
       protocol: TCP
       name: http
+      nodePort: {{ .Values.service.nodePort }}
   selector:
-    {{- include "welcome.selectorLabels" . | nindent 4 }}
+    app: {{ .Values.app.name }}
