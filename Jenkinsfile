@@ -40,5 +40,32 @@ pipeline {
 
             }
         }
+        stage('Update Helm values'){
+            steps{
+                echo'Updating Helm Values'
+                sh '''
+                sed -i "s/tag:.*/tag: ${IMAGE_TAG}/" /helm/welcome/values.yaml
+                '''
+            }
+        }
+        stage('Push Changes (GitOps)'){
+            steps{
+                withCredentials([usernamePassword(
+                    credentialsId: 'git-credentials',
+                    usernameVariable: 'GIT_USERNAME',
+                    passwordVariable: 'GIT_PASSWORD'
+                )]){
+                    sh '''
+                        git config user.email "temgvan@gmail.com"
+                        git config user.name "bcho77"
+
+                        git add helm/welcome/values.yaml
+                        git commit -m "Update image tag to ${IMAGE_TAG}"
+                        git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/bcho77/devops-cicd-project.git HEAD:main
+                    '''
+                    }
+                }
+            }
+
     }
 }
