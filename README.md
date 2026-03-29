@@ -87,4 +87,4 @@ Jenkins → Build → Push Image → Update Helm → Git Push
 
 ## 🚀 Deployment Result
 
-![Argo CD Result](result/result.jpg)
+![Argo CD Result](app/result/Result.JPG)
