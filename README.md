@@ -84,3 +84,7 @@ This commit triggers the GitOps deployment process.
 ## 🚀 Deployment Flow
 Jenkins → Build → Push Image → Update Helm → Git Push
 → Argo CD detects change → Deploy to Kubernetes
+
+## 🚀 Deployment Result
+
+![Argo CD Result](result/result.jpg)
