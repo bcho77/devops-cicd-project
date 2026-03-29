@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: welcome
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/bcho77/devops-cicd-project.git
+    targetRevision: gitops/deploy_with_argocd
+    path: helm/welcome
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=True
+
+
+      
